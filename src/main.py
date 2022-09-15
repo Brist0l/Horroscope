@@ -2,9 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 
 import check_internet
-from src import args
+from args import Parser
 
-star_sign = args.Parser().get_star_sign()
+star_sign = Parser().get_star_sign()
 
 response = requests.get(f"https://www.horoscope.com/zodiac-signs/{star_sign}")
 
@@ -17,15 +17,6 @@ else:
         exit(1)
 
 soup = BeautifulSoup(response.content, 'html.parser')
-print(soup.title)
 
-image_list = []
-
-images = soup.select('img')
-for image in images:
-    src = image.get('src')
-    alt = image.get('alt')
-    image_list.append({"src": src, "alt": alt})
-
-for image in image_list:
-    print(image)
+# for para in soup.find_all("p"):
+#     print(para.get_text())
