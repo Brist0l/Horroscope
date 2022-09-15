@@ -5,12 +5,11 @@ import check_internet
 from args import Parser
 
 star_sign = Parser().get_star_sign()
+print(star_sign)
 
 response = requests.get(f"https://www.horoscope.com/zodiac-signs/{star_sign}")
 
-if response.status_code == 200:
-    pass
-else:
+if not response.status_code == 200:
     print("Some Connection Error\nChecking Internet!")
     if check_internet.is_connected(check_internet.REMOTE_SERVER):
         print("Internet Is Available\nWebsite Is Down")

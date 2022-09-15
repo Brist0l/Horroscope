@@ -1,25 +1,25 @@
 import argparse
-import json
-import string
-
-
 class Parser:
     def __init__(self):
         self.parser = argparse.ArgumentParser(description="Horrorscope!! Boo :)",epilog="Another Terminal App made by brist0l 8)")
         self._arguments()
         self.args_value = self.parser.parse_args()
 
+        if self.args_value.sign:
+            self.star_sign = self.args_value.sign.lower()
         self._self_checks()
 
     def _self_checks(self):
-        self._remove_error()
-        self._check_valid_sign()
+        if self.args_value.sign:
+            self._check_valid_sign()
         if self.args_value.save:
             self._save_file()
 
     def _arguments(self):
-        self.parser.add_argument('--sign', '-s',type=string,metavar="Your Starsign", help="Your Starsign")
+        self.parser.add_argument('--sign', '-s',type=str,nargs='?',metavar="Your Starsign", help="Your Starsign")
         self.parser.add_argument('--save',action='store_true',help="Save Your Starsign")
+        # desc of the starsign
+        # forecast for today
 
     def _check_valid_sign(self):
         valid_signs = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 'libra',
@@ -31,21 +31,18 @@ class Parser:
             exit(1)
 
     def get_star_sign(self):
+        if not self.args_value.sign:
+            with open(".Hscope",'r') as f:
+                self.star_sign = f.read()
         return self.star_sign
 
-    def _remove_error(self):
-        try:
-            self.star_sign = self.args_value.sign.lower()
-        except AttributeError:
-            print("Enter your sign bruh -_-")
-            self.parser.print_help()
-            exit(1)
+
     def _save_file(self):
-        # check if file exists
-        # json format
-        # if not print msg that it is making a new one
-        data = {"Starsign":"Virgo"}
-        # .Hscope is for debugging purposes
         with open('.Hscope','w') as f: # change it to ~/.Hscope
-            json.dump(data,f)
+            if self.args_value.sign:
+                f.write(self.star_sign)
+            else:
+                print("Enter Your Starsign Bruh -_-")
+                self.parser.print_help()
+                exit(1)
         
