@@ -14,11 +14,17 @@ class Parser:
             self._check_valid_sign()
         if self.args_value.save:
             self._save_file()
+       
+    def get_args(self):
+        if self.args_value.desc:
+            return True
+        else:  
+            return False
 
     def _arguments(self):
         self.parser.add_argument('--sign', '-s',type=str,nargs='?',metavar="Your Starsign", help="Your Starsign")
         self.parser.add_argument('--save',action='store_true',help="Save Your Starsign")
-        # desc of the starsign
+        self.parser.add_argument('--desc','-d',action='store_true',help="Get Description Of Your Starsign")
         # forecast for today
 
     def _check_valid_sign(self):
@@ -32,8 +38,13 @@ class Parser:
 
     def get_star_sign(self):
         if not self.args_value.sign:
-            with open(".Hscope",'r') as f:
-                self.star_sign = f.read()
+            try:
+                with open(".Hscope",'r') as f:
+                    self.star_sign = f.read()
+            except FileNotFoundError:
+                self.parser.print_help()
+                exit(1)
+
         return self.star_sign
 
 
