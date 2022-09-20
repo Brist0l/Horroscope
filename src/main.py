@@ -1,8 +1,12 @@
+#!/bin/python3
+
+
 import requests
 from bs4 import BeautifulSoup
 
 import check_internet
 from args import Parser
+from datetime import date
 
 star_sign = Parser().get_star_sign()
 
@@ -20,7 +24,7 @@ if requests.get('https://www.astrology.com/').status_code != 200:
 
 
 if Parser().get_args() == "today":
-    print(f"\nDaily Horroscope For {star_sign} is:\n")
+    print(f"\nDaily Horroscope For {date.today()} is:\n")
     response = requests.get(f"https://www.astrology.com/horoscope/daily/{star_sign}.html") # daily horrorscope 
     soup = BeautifulSoup(response.content, 'html.parser')
     get_info(soup)
