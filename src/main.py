@@ -6,19 +6,25 @@ from args import Parser
 
 star_sign = Parser().get_star_sign()
 
-# get desc
-def get_desc():
+def get_info(soup):
     for para in soup.find_all("p"):
          print(para.get_text())
 
-response = requests.get(f"https://www.horoscope.com/zodiac-signs/{star_sign}")
 
-if not response.status_code == 200:
+# Internet Check
+if requests.get('https://www.astrology.com/').status_code != 200:
     print("Some Connection Error\nChecking Internet!")
     if check_internet.is_connected(check_internet.REMOTE_SERVER):
         print("Internet Is Available\nWebsite Is Down")
         exit(1)
 
-soup = BeautifulSoup(response.content, 'html.parser')
-if Parser().get_args():
-    get_desc()
+
+if Parser().get_args() == "today":
+    print(f"\nDaily Horroscope For {star_sign} is:\n")
+    response = requests.get(f"https://www.astrology.com/horoscope/daily/{star_sign}.html") # daily horrorscope 
+    soup = BeautifulSoup(response.content, 'html.parser')
+    get_info(soup)
+else:
+    response = requests.get(f"https://www.astrology.com/zodiac-signs/{star_sign}") # description
+    soup = BeautifulSoup(response.content, 'html.parser')
+    get_info(soup)
